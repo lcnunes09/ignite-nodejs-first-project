@@ -54,11 +54,20 @@ app.post("/account", (request, response) => {
     return response.status(201).send();
 });
 
-app.get("/statement", verifyIfAccountExistsByCPF, (request, response) => {
+app.put("/account", verifyIfAccountExistsByCPF, (request, response) => {
+    const { name } = request.body;
     const { customer } = request;
-    
-    return response.json(customer.statement);
+
+    customer.name = name;
+
+    return response.status(201).send();
 });
+
+app.get("/account", verifyIfAccountExistsByCPF, (request, response) => {
+    const { customer } = request;
+
+    return response.json(customer);
+})
 
 app.post("/deposit", verifyIfAccountExistsByCPF, (request, response) => {
     const { description, amount } = request.body;
@@ -95,6 +104,12 @@ app.post("/withdraw", verifyIfAccountExistsByCPF, (request, response) => {
     customer.statement.push(statementOperation);
 
     return response.status(201).send();
+});
+
+app.get("/statement", verifyIfAccountExistsByCPF, (request, response) => {
+    const { customer } = request;
+    
+    return response.json(customer.statement);
 });
 
 app.get("/statement/date", verifyIfAccountExistsByCPF, (request, response) => {
